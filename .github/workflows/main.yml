@@ -1,0 +1,78 @@
+# This is a basic automation workflow to help you get started with GitHub Action.
+
+name: CI
+
+  # Controls when the workflow will run
+on:
+  # Triggers the workflow on push for main and dev branch
+  push:
+    branches:
+        # Set your base branch name here
+        - main
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+    # This workflow contains a single job called "deploy"
+    deploy:
+      # The type of runner that the job will run on
+      runs-on: ubuntu-latest
+      env:
+        DBFS_LIB_PATH: abfss://bronze@mvpdwhprod.dfs.core.windows.net/wheels
+        REPO_PATH: 2419098924392834
+        LATEST_WHEEL_NAME: .whl
+
+      # Steps represent a sequence of tasks that will be executed as part of the job
+      steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+        # Version range or exact version of a Python version to use, using SemVer's version range syntax.
+          python-version: 3.8
+ 
+      # - name: Install required packages
+      #   run: |
+      #     pip install databricks-cli==0.2.0
+      #     #pip install pytest setuptools wheel
+
+      # - name: Check Databricks CLI version
+      #   run: |
+      #     databricks -v
+          
+      #- name: Install mods
+      #  run: |
+      #    pip install databricks-cli
+      #    pip install pytest setuptools wheel
+
+      - name: Check Databricks CLI version
+        run: |
+          REQUIRED_VERSION="0.233.1" 
+          pip show databricks-cli
+          databricks --version
+          #brew tap databricks/tap
+          #winget search databricks
+          #winget install Databricks.DatabricksCLI
+  
+      - name: Configure CLI
+        run: |
+          #echo "${{ secrets.DEPLOYMENT_TARGET_URL }} ${{ secrets.DEPLOYMENT_TARGET_TOKEN }}" | databricks configure --token
+          az login --service-principal --username ${{ secrets.SERVICE_PRINCIPAL_ID }} --password ${{ secrets.SERVICE_PRINCIPAL_SECRET }} --tenant ${{ secrets.TENANT_ID }}
+          
+      - name: Extract branch name
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: extract_branch
+  
+      - name: Update Databricks Git folder
+        run: |
+          databricks repos update --repo-id 2419098924392834 --branch ${{ steps.extract_branch.outputs.branch }}
+
+      - name: Build Wheel and send to Databricks workspace DBFS location
+        run: |
+          cd $GITHUB_WORKSPACE
+          python setup.py bdist_wheel
+          dbfs cp --overwrite ./dist/* ${{env.DBFS_LIB_PATH}}
+          # there is only one wheel file; this line copies it with the original version number in file name and overwrites if that version of wheel exists; it does not affect the other files in the path
+          dbfs cp --overwrite ./dist/* ${{env.DBFS_LIB_PATH}}${{env.LATEST_WHEEL_NAME}} # this line copies the wheel file and overwrites the latest version with it
