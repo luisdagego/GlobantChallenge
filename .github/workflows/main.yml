@@ -59,7 +59,7 @@ jobs:
         #uses: microsoft/install-databricks-cli@v1.0.0
         run: |
           winget search databricks
-          winget install Databricks.DatabricksCLI     
+          winget install Databricks.DatabricksCLI Y
          
       - name: Check Databricks CLI version
         run: |
