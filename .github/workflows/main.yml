@@ -52,6 +52,7 @@ jobs:
       - name: install-databricks-cli
         #uses: microsoft/install-databricks-cli@v1.0.0
         run: |
+          pip install winget
           winget search databricks
           winget install Databricks.DatabricksCLI     
          
