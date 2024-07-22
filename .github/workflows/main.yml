@@ -43,7 +43,8 @@ jobs:
           
       - name: Install mods
         run: |
-         pip install databricks-cli
+         #pip install databricks-cli
+         pip install databricks-cli==0.2.0
          pip install pytest setuptools wheel
 
       - name: Check Databricks CLI version
