@@ -59,7 +59,7 @@ jobs:
       - name: Configure CLI
         run: |
           #echo "${{ secrets.DEPLOYMENT_TARGET_URL }} ${{ secrets.DEPLOYMENT_TARGET_TOKEN }}" | databricks configure --token
-          az login --service-principal --username ${{ secrets.SERVICE_PRINCIPAL_ID }} --password ${{ secrets.SERVICE_PRINCIPAL_SECRET }} --tenant ${{ secrets.TENANT_ID }}
+          az login --service-principal --username de8c9d7b-2e4d-4ec5-acd5-96d8bbcbda62 --password wbM8Q~Q3rbVSPAreOV5~wUagB5KhF9ybMAYwzctV --tenant 1e315b97-afad-4dd3-8924-d10acb763960
           
       - name: Extract branch name
         shell: bash
@@ -68,7 +68,7 @@ jobs:
   
       - name: Update Databricks Git folder
         run: |
-          databricks repos update --repo-id 2419098924392834 --branch ${{ steps.extract_branch.outputs.branch }}
+          databricks repos update --repo-id 24190989243928341 --branch main
 
       - name: Build Wheel and send to Databricks workspace DBFS location
         run: |
