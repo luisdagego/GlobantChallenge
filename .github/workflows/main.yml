@@ -74,7 +74,14 @@ jobs:
   
       - name: Configure CLI
         run: |
-          databricks configure --token https://adb-1820024605477303.3.azuredatabricks.net dapieaccc06f6f22ebf7e6e785a353dcf894-3
+          
+          adburl="https://adb-1820024605477303.3.azuredatabricks.net"
+          token=dapieaccc06f6f22ebf7e6e785a353dcf894-3
+          databricks configure --token <<EOF
+          $adburl
+          $token
+          EOF
+          #databricks configure --token https://adb-1820024605477303.3.azuredatabricks.net dapieaccc06f6f22ebf7e6e785a353dcf894-3
           #echo "https://adb-1820024605477303.3.azuredatabricks.net dapieaccc06f6f22ebf7e6e785a353dcf894-3" | databricks configure --token
           #echo "${{ secrets.DEPLOYMENT_TARGET_URL }} ${{ secrets.DEPLOYMENT_TARGET_TOKEN }}" | databricks configure --token
           #az login --service-principal --username de8c9d7b-2e4d-4ec5-acd5-96d8bbcbda62 --password wbM8Q~Q3rbVSPAreOV5~wUagB5KhF9ybMAYwzctV --tenant 1e315b97-afad-4dd3-8924-d10acb763960
