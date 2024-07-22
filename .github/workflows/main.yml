@@ -55,8 +55,8 @@ jobs:
          
       - name: Check Databricks CLI version
         run: |
-          REQUIRED_VERSION="0.233.1" 
-          pip show databricks-cli
+          #REQUIRED_VERSION="0.233.1" 
+          #pip show databricks-cli
           databricks --version
           #brew tap databricks/tap
           #winget search databricks
