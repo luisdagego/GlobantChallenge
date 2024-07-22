@@ -15,8 +15,8 @@ jobs:
     # This workflow contains a single job called "deploy"
     deploy:
       # The type of runner that the job will run on
-      #runs-on: ubuntu-latest
-      runs-on: windows-latest
+      runs-on: ubuntu-latest
+      #runs-on: windows-latest
       env:
         DBFS_LIB_PATH: abfss://bronze@mvpdwhprod.dfs.core.windows.net/wheels
         REPO_PATH: 2419098924392834
@@ -49,17 +49,17 @@ jobs:
       #    #pip install databricks-cli==0.3
       #    pip install pytest setuptools wheel
 
-      - name: Install winget
-        uses: Cyberboss/install-winget@v1
-        # with:
-        #   # No scopes GitHub token for querying the API and downloading from winget-cli releases
-        #   GITHUB_TOKEN: # optional, default is NONE
+      # - name: Install winget
+      #   uses: Cyberboss/install-winget@v1
+      #   # with:
+      #   #   # No scopes GitHub token for querying the API and downloading from winget-cli releases
+      #   #   GITHUB_TOKEN: # optional, default is NONE
 
       - name: install-databricks-cli
-        #uses: microsoft/install-databricks-cli@v1.0.0
-        run: |
-          winget search databricks
-          winget install Databricks.DatabricksCLI Y
+        uses: microsoft/install-databricks-cli@v1.0.0
+        # run: |
+        #   winget search databricks
+        #   winget install Databricks.DatabricksCLI Y
          
       - name: Check Databricks CLI version
         run: |
@@ -74,7 +74,8 @@ jobs:
   
       - name: Configure CLI
         run: |
-          echo "https://adb-1820024605477303.3.azuredatabricks.net dapieaccc06f6f22ebf7e6e785a353dcf894-3" | databricks configure --token
+          databricks configure --token https://adb-1820024605477303.3.azuredatabricks.net dapieaccc06f6f22ebf7e6e785a353dcf894-3
+          #echo "https://adb-1820024605477303.3.azuredatabricks.net dapieaccc06f6f22ebf7e6e785a353dcf894-3" | databricks configure --token
           #echo "${{ secrets.DEPLOYMENT_TARGET_URL }} ${{ secrets.DEPLOYMENT_TARGET_TOKEN }}" | databricks configure --token
           #az login --service-principal --username de8c9d7b-2e4d-4ec5-acd5-96d8bbcbda62 --password wbM8Q~Q3rbVSPAreOV5~wUagB5KhF9ybMAYwzctV --tenant 1e315b97-afad-4dd3-8924-d10acb763960
           
