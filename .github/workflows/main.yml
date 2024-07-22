@@ -49,10 +49,15 @@ jobs:
       #    #pip install databricks-cli==0.3
       #    pip install pytest setuptools wheel
 
+      - name: Install winget
+        uses: Cyberboss/install-winget@v1
+        # with:
+        #   # No scopes GitHub token for querying the API and downloading from winget-cli releases
+        #   GITHUB_TOKEN: # optional, default is NONE
+
       - name: install-databricks-cli
         #uses: microsoft/install-databricks-cli@v1.0.0
         run: |
-          pip install winget
           winget search databricks
           winget install Databricks.DatabricksCLI     
          
